@@ -518,6 +518,7 @@ if (userAgent.match(/chrome|chromium|crios/i)) {
 let quoteText = [
   'Check out the "Other links" button in the menu for all of the links.',
   'Check out Silk at https://bit.ly/ilovesilk/',
+  'Winter Break 🎉'
 ]
 
 document.getElementById("quote").innerText = quoteText[Math.floor(Math.random() * quoteText.length)];
