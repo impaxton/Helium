@@ -11,7 +11,7 @@ window.addEventListener('load', () => {
   if (window.panicKeys && Array.isArray(window.panicKeys) && window.panicUrl) detectPanicKeys();
 });
 
-setTimeout(() => notification(`Welcome. Check out the "Other Links" button in the menu to get more links.`, "#039dfc"), 2500);
+setTimeout(() => notification(`Welcome. Join the telegram to talk: t.me/heliumatschool`, "#039dfc"), 2500);
 
 function reloadPage() {
   if (iframe.src != "about:blank") iframe.src = iframe.src;
