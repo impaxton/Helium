@@ -19,7 +19,7 @@ function createAppPanel(app) {
     appPanel.appendChild(titleContainer);
 
     appPanel.onclick = () => {
-        window.location.href = parent.runService(app.url);;
+        parent.runService(app.url);;
     };
 
     return appPanel;
