@@ -175,7 +175,10 @@ async function runService(url) {
   if (tab.url === 'helium://settings' || tab.url.includes("/subpages/settings/s.html")) {
     urlInput.value = "helium://settings";
     iframe.src = '/subpages/settings/s.html';
-  } else if (tab.url === 'helium://apps' || tab.url.includes("/subpages/apps/a.html")) {
+  } else if (tab.url === 'helium://gpt' || tab.url.includes("/subpages/gpt/html/index.html")) {
+    urlInput.value = "helium://gpt";
+    iframe.src = '/subpages/gpt/html/index.html';
+  }else if (tab.url === 'helium://apps' || tab.url.includes("/subpages/apps/a.html")) {
     urlInput.value = "helium://apps";
     iframe.src = '/subpages/apps/a.html';
   } else if (tab.url === 'helium://landing' || tab.url.includes("/subpages/landing/l.html")) {
@@ -442,6 +445,10 @@ function openSettings() {
   runService('helium://settings');
 }
 
+function openGPT() {
+  runService('helium://gpt')
+}
+
 setTimeout(() => {
   try {
     inFrame = window !== top;
@@ -522,3 +529,7 @@ let quoteText = [
 document.getElementById("quote").innerText = quoteText[Math.floor(Math.random() * quoteText.length)];
 
 setTimeout(console.log.bind(console, `%cInformation:\nOnline: ${online}\nURL: ${diagnosticDomain}\nBrowser: ${browserName}\nUA: ${userAgent}`, "background: grey;color:white;padding:5px;line-height: 15px; border-radius: 5px;font-size:12px;"));
+
+
+//gpt widget
+

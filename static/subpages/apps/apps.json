@@ -7,7 +7,7 @@
     },
     {
         "name": "ChatGPT (WORKING!)",
-        "url": "https://gpt.paxton.rip/",
+        "url": "helium://gpt",
         "image": "https://static.vecteezy.com/system/resources/previews/024/558/807/original/openai-chatgpt-logo-icon-free-png.png",
         "category": ["All", "Utility"]
     },

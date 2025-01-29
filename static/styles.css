@@ -316,7 +316,7 @@ iframe {
   display: none;
   transition: all 0.2s ease-in-out;
   width: 140px;
-  height: 175px;
+  height: 200px;
   border-radius: 0 0 0 3px;
 }
 
@@ -515,3 +515,4 @@ iframe {
   width: 70%;
 }
 }
+
