@@ -496,7 +496,7 @@ setTimeout(() => {
   }
 }, 200);
 
-if (window.innerWidth <= 600) notification("Some features may not work on mobile.", "#db8cff");
+if (window.innerWidth <= 600) notification("Some features may not work on smaller screen sizes.", "#db8cff");
 
 setTimeout(console.log.bind(console, "%cHelium", "background: #6C3BAA;color:#FFF;padding:5px;border-radius: 5px;line-height: 26px; font-size:25px;"));
 setTimeout(console.log.bind(console, "%cIf you are seeing this, the main script system has loaded.", "background: #6C3BAA;color:#FFF;padding:5px;border-radius: 5px;line-height: 20px; font-size:18px;"));
