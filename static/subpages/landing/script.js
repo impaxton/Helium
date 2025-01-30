@@ -16,3 +16,8 @@ document.addEventListener('DOMContentLoaded', startClock);
 
 const root = document.documentElement;
 if (localStorage.getItem('theme')) root.style.setProperty('--background-color', localStorage.getItem('theme'));
+function thingy () {
+    const tags = ["Fully unblocked ChatGPT! Just click the first icon below.", "Check out the games page to pass some time!", "Want to change the look of Helium? Check out the settings page!"];
+    document.getElementById('tag').innerHTML = tags[Math.floor(Math.random() * tags.length)];
+}
+document.onload = thingy();

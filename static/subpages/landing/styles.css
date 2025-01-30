@@ -44,3 +44,41 @@
     cursor: pointer;
     font-style: italic;
 }
+
+#buttons {
+    display: flex;
+    position: absolute;
+    width: 40vw;
+    height: 5vh;
+    left: 50%;
+    top: 49vh;
+    transform: translate(-50%);
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+#buttons img:hover {
+    transform: scale(1.15);
+    cursor: pointer;
+}
+#buttons img {
+    width: 40px;
+    transition: transform 0.1s ease-in-out;
+}
+
+#text {
+    position: absolute;
+    width: 60vw;
+    height: 3vh;
+    left: 50%;
+    top: 46%;
+    transform: translate(-50%);
+}
+
+#text p {
+    color: #fff;
+    font-size: 17px;
+    font-style: italic;
+    font-family: 'Inter', sans-serif;
+    font-weight: 300;
+}
