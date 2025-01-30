@@ -33,7 +33,7 @@ fastify.get("/uv/uv.config.js", (req, res) => {
 	return res.sendFile("uv/uv.config.js", publicPath);
 });
 
-fastify.post('/gpt', async (request, reply) => {
+fastify.post('/gpt/', async (request, reply) => {
     try {
         const response = await fetch('https://chatgpt4online.org/wp-json/mwai-ui/v1/chats/submit', {
             method: 'POST',
