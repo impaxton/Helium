@@ -33,87 +33,36 @@ fastify.get("/uv/uv.config.js", (req, res) => {
 	return res.sendFile("uv/uv.config.js", publicPath);
 });
 
-fastify.post('/gpt/', {
-	schema: {
-	  body: {
-		type: 'object',
-		properties: {
-		  body: { type: 'string' },
-		},
-		required: ['body'],
-	  },
-	},
-  }, async (request, reply) => {
-	const { body } = request.body;
-  
-	try {
-	  const response = await fetch('https://chatgpt4online.org/wp-json/mwai-ui/v1/chats/submit', {
-		method: 'POST',
-		headers: {
-		  Accept: "text/event-stream",
-		  "Content-Type": "application/json",
-		  DNT: "1",
-		  Referer: "https://chatgpt4online.org/",
-		  "Sec-CH-UA": '"Not A(Brand";v="8", "Chromium";v="132", "Google Chrome";v="132"',
-		  "Sec-CH-UA-Mobile": "?0",
-		  "Sec-CH-UA-Platform": '"macOS"',
-		  "User-Agent":
-			"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
-		  "X-WP-Nonce": "7b1062963e",
-		},
-		body: JSON.stringify({
-		  botId: "default",
-		  customId: null,
-		  session: "N/A",
-		  chatId: "xru060vkrqf",
-		  contextId: 58,
-		  messages: [],
-		  newMessage: body,
-		  newFileId: null,
-		  stream: true,
-		}),
-	  });
-  
-	  if (!response.ok) {
-		throw new Error(`HTTP error! Status: ${response.status}`);
-	  }
-  
-	  // Handle the SSE stream
-	  const reader = response.body.getReader();
-	  const decoder = new TextDecoder();
-  
-	  let aggregatedResponse = "";
-  
-	  while (true) {
-		const { done, value } = await reader.read();
-		if (done) break;
-  
-		const chunk = decoder.decode(value, { stream: true });
-		chunk.split('\n').forEach((line) => {
-		  if (line.startsWith('data: ')) {
-			const eventData = line.slice(6); // Remove 'data: ' prefix
-			try {
-			  const parsedData = JSON.parse(eventData);
-  
-			  if (parsedData.type === 'live') {
-				// Aggregate 'live' chunks
-				aggregatedResponse += parsedData.data;
-			  } else if (parsedData.type === 'end') {
-				// Finalize with 'end' chunk
-				const endData = JSON.parse(parsedData.data);
-				reply.send({ response: endData.reply });
-			  }
-			} catch (error) {
-			  console.error('Error parsing event data:', error);
-			}
-		  }
-		});
-	  }
-	} catch (error) {
-	  console.error('Error:', error);
-	  reply.code(500).send({ error: 'Failed to process the request' });
-	}
-  });
+fastify.post('/gpt', async (request, reply) => {
+    try {
+        const response = await fetch('https://chatgpt4online.org/wp-json/mwai-ui/v1/chats/submit', {
+            method: 'POST',
+            headers: {
+                "accept": "text/event-stream",
+                "content-type": "application/json",
+                "dnt": "1",
+                "referer": "https://chatgpt4online.org/",
+                "sec-ch-ua": "\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Google Chrome\";v=\"132\"",
+                "sec-ch-ua-mobile": "?1",
+                "sec-ch-ua-platform": "\"Android\"",
+                "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36",
+                "x-wp-nonce": "840ab3104c"
+            },
+            body: JSON.stringify(request.body)
+        });
+
+        reply.header('Content-Type', response.headers.get('content-type'));
+
+        // Stream response to client
+        for await (const chunk of response.body) {
+            reply.raw.write(chunk);
+        }
+        reply.raw.end();
+    } catch (error) {
+        reply.status(500).send({ error: error.message });
+    }
+});
+
   
   
 

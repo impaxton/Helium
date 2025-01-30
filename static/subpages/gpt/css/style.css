@@ -86,7 +86,7 @@ body {
 .conversation {
     width: 100%;
     min-height: 50%;
-    height: 100vh;
+    height: 95vh;
     overflow-y: scroll;
     overflow-x: hidden;
     display: flex;
@@ -388,10 +388,10 @@ input:checked+label:after {
 }
 
 .buttons {
-    min-height: 10vh;
+    min-height: 0;
     display: flex;
     align-items: start;
-    justify-content: left;
+    justify-content: center;
     width: 100%;
 }
 
@@ -417,7 +417,28 @@ input:checked+label:after {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none;  /* IE 10+ */
 }
-
+/* width */
+::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: var(--blur-bg);
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: var(--conversations);
+    border-radius: 8px;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #ffffff;
+    
+  }
+  
 select {
     -webkit-border-radius: 8px;
     -moz-border-radius: 8px;
@@ -599,8 +620,8 @@ ul {
     .buttons {
     flex-wrap: wrap;
     gap: 5px;
-    padding-bottom: 10vh;
-    margin-bottom: 10vh;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
     .field {
@@ -638,7 +659,6 @@ a:-webkit-any-link {
     border: none;
     outline: none;
     color: var(--colour-3);
-
     resize: vertical;
     max-height: 150px;
     min-height: 80px;
@@ -717,7 +737,7 @@ a:-webkit-any-link {
 .color-picker>fieldset {
     border: 0;
     display: flex;
-    width: fit-content;
+    width: 100%;
     background: var(--colour-1);
     margin-inline: auto;
     border-radius: 8px;

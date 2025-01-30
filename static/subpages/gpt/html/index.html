@@ -4,18 +4,16 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0 maximum-scale=1.0">
-        <meta name="description" content="">
-        <meta property="og:title" content="">
-        <meta property="og:description" content="">
-        <meta property="og:url" content="">
+        <meta name="description" content="GPT Website">
+        <meta property="og:title" content="GPT Website">
+        <meta property="og:description" content="GPT Website">
+        <meta property="og:url" content="GPT Website">
         <link rel="stylesheet" href="../css/style.css">
         <link rel="manifest" href="../img/site.webmanifest">
         <script src="../js/icons.js"></script>
         <script src="../js/chat.js" defer></script>
         <script src="https://cdn.jsdelivr.net/npm/markdown-it@latest/dist/markdown-it.min.js"></script>
         <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@latest/build/styles/base16/dracula.min.css">
-        <script src="https://ka-f.fontawesome.com/releases/v6.1.1/css/pro-v4-font-face.min.css?token=d0514f1901"></script>
-        <script src="https://ka-f.fontawesome.com/releases/v6.1.1/css/pro-v4-font-face.min.css?token=d0514f1901"></script>
         <script>
             const user_image        = `<img src="../img/user.png" alt="User Avatar">`;
             const gpt_image         = `<img src="../img/gpt.png" alt="GPT Avatar">`;
@@ -56,7 +54,7 @@
         <script src="../js/highlight.min.js"></script>
         <script src="../js/highlightjs-copy.min.js"></script>
         <script>window.conversation_id = `{{chat_id}}`</script>
-        <title>Paxton's ChatGPT</title>
+        <title>GPT Website</title>
     </head>
     <body>
         <div class="gradient"></div>
@@ -77,10 +75,31 @@
                     <div class="info">
                         <i class="fa-regular fa-circle-info"></i>
                         <span class="convo-title">By: Paxton Warin<br>
-                            Version: 1.0.0<br>
-                            Release: 2024-04-14<br>
+                            Version: 2.0.0<br>
+                            Release: 1-29-2025<br>
                         </span>
                     </div>
+                    <div class="buttons"> 
+                        <form class="color-picker" action="">
+                            <fieldset>
+                                <legend class="visually-hidden">Pick a color scheme</legend>
+                                <label for="light" class="visually-hidden">Light</label>
+                                <input type="radio" title="light" name="theme" id="light" checked>
+                            
+                                <label for="pink" class="visually-hidden">Pink theme</label>
+                                <input type="radio" title="pink" id="pink" name="theme">
+                            
+                                <label for="blue" class="visually-hidden">Blue theme</label>
+                                <input type="radio" title="blue" id="blue" name="theme">
+                            
+                                <label for="green" class="visually-hidden">Green theme</label>
+                                <input type="radio" title="green" id="green" name="theme">
+                            
+                                <label for="dark" class="visually-hidden">Dark theme</label>
+                                <input type="radio" title="dark" id="dark" name="theme">
+                            </fieldset>
+                            </form>
+                        </div>
                 </div>
             </div>
             <div class="conversation disable-scrollbars">
@@ -90,7 +109,7 @@
                         <i class="fa-regular fa-stop"></i>
                     </button>
                 </div>
-                <div class="box" id="messages">
+                <div class="box" id="messages" style="height: 87vh;">
                 </div>
                 <div class="user-input">
                     <div class="box input-box">
@@ -99,50 +118,6 @@
                             <i class="fa-regular fa-paper-plane-top"></i>
                         </div>
                     </div>
-                </div>
-                <div class="buttons">
-                    <div class="field">
-                        <input type="checkbox" id="switch"/>
-                        <label for="switch"></label>
-                        <span class="about">Web Access</span>
-                    </div>
-                    <div class="field">
-                        <select name="model" id="model">
-                            <option value="gpt-4o">gpt-4o</option>
-                        </select>
-                        <!-- <span class="about">Model</span> -->
-                    </div>
-                    <div class="field">
-                        <select name="jailbreak" id="jailbreak">
-                            <option value="default" selected>default</option>
-                            <option value="gpt-math-1.0">math 1.0</option>
-                            <option value="gpt-dude-1.0">dude 1.0</option>
-                            <option value="gpt-dan-1.0">dan 1.0</option>
-                            <option value="gpt-dan-2.0">dan 2.0</option>
-                            <option value="gpt-dev-2.0">dev 2.0</option>
-                            <option value="gpt-evil-1.0">evil 1.0</option>
-                        </select>
-                    </div>
-
-                <form class="color-picker" action="">
-                    <fieldset>
-                        <legend class="visually-hidden">Pick a color scheme</legend>
-                        <label for="light" class="visually-hidden">Light</label>
-                        <input type="radio" title="light" name="theme" id="light" checked>
-                    
-                        <label for="pink" class="visually-hidden">Pink theme</label>
-                        <input type="radio" title="pink" id="pink" name="theme">
-                    
-                        <label for="blue" class="visually-hidden">Blue theme</label>
-                        <input type="radio" title="blue" id="blue" name="theme">
-                    
-                        <label for="green" class="visually-hidden">Green theme</label>
-                        <input type="radio" title="green" id="green" name="theme">
-                    
-                        <label for="dark" class="visually-hidden">Dark theme</label>
-                        <input type="radio" title="dark" id="dark" name="theme">
-                    </fieldset>
-                    </form>
                 </div>
             </div>
         </div>

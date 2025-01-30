@@ -63,8 +63,15 @@ const ask_gpt = async (message) => {
     message_input.value = ``;
     message_input.innerHTML = ``;
     message_input.innerText = ``;
-
-    add_conversation(window.conversation_id, message.substr(0, 20));
+    (async () => {
+      let define = await add_conversation(
+        window.conversation_id, 
+        message.length > 20 ? message.substr(0, 20) + '...' : message
+      );
+      if (define === undefined) {
+        await add_message(window.conversation_id, "assistant", "Hello! Ask me a question by sending a chat! 😊");
+      }
+    })();
     window.scrollTo(0, 0);
     window.controller = new AbortController();
 
@@ -110,84 +117,87 @@ const ask_gpt = async (message) => {
     window.scrollTo(0, 0);
     await new Promise((r) => setTimeout(r, 1000));
     window.scrollTo(0, 0);
-// Replace this URL with your endpoint
-const url = 'https://chatgpt4online.org/wp-json/mwai-ui/v1/chats/submit';
-const data = {
-        "botId": "default",
-        "customId": null,
-        "session": "N/A",
-        "chatId": "xru060vkrqf",
-        "contextId": 58,
-        "messages": [
-            {
-                "id": "qhy7wjncgrn",
-                "role": "assistant",
-                "content": "Hi! How can I help you?",
-                "who": "AI: ",
-                "timestamp": 1738091891312
-            },
-            {
-                "id": "mwd2jdp29wk",
-                "role": "user",
-                "content": "hi",
-                "who": "User: ",
-                "timestamp": 1738091898116
-            },
-            {
-                "id": "f42j8597tzl",
-                "role": "assistant",
-                "content": "Hello! How’s your day going?",
-                "who": "AI: ",
-                "timestamp": 1738091899182,
-                "isQuerying": false
-            },
-            {
-                "id": "yzrshdlsafs",
-                "role": "user",
-                "content": "What verison are you",
-                "who": "User: ",
-                "timestamp": 1738091904887
-            },
-            {
-                "id": "lwhla2rgad",
-                "role": "assistant",
-                "content": "I'm based on the GPT-4 architecture. How can I assist you today?",
-                "who": "AI: ",
-                "timestamp": 1738091906333,
-                "isQuerying": false
-            }
-        ],
-        "newMessage": "What is your version",
-        "newFileId": null,
-        "stream": true
-};
-
-// Function to make a POST request and handle SSE
-async function makePostRequest(url, data) {
-  try {
-  } catch (error) {
-    console.error('Error:', error);
-  }
-}
-
-// Call the function
-makePostRequest(url, data);
-    const response = await fetch(`/gpt/`, {
+    const formatConversation = async () => {
+      const conversation = await get_conversation(window.conversation_id);
+      return [
+        {
+          role: "assistant",
+          content: "Hello! Ask me a question by sending a chat! 😊",
+          who: "AI: ",
+          timestamp: 0
+        },
+        ...conversation.map(msg => ({
+          role: msg.role,
+          content: msg.content,
+          who: msg.role === "assistant" ? "AI: " : "User: ",
+          timestamp: 0
+        }))
+      ];
+    };
+    
+    const response = await fetch(`/gpt`, {
       method: `POST`,
+      signal: window.controller.signal,
       headers: {
-        "content-type": `application/json`,
+          "accept": "text/event-stream",
+          "content-type": "application/json"
       },
       body: JSON.stringify({
-        body: message,
+          "botId": "default",
+          "messages": await formatConversation(),
+          "newFileId": null,
+          "newMessage": message,
+          "session": "721376128",
+          "stream": true
       }),
-    });
-
-    const data2 = await response.json();
-    
-    document.getElementById(`gpt_${window.token}`).innerHTML = data2.response;
+  });
+  
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  const targetElement = document.getElementById(`gpt_${window.token}`);
+  var accumulatedText = ""; // Stores the live stream data
+  let finalData = null; // Stores the "end" data
+  
+  async function readStream() {
+      return new Promise(async (resolve) => {
+          while (true) {
+              const { done, value } = await reader.read();
+              if (done) break; // Exit when the stream ends
+  
+              const chunk = decoder.decode(value, { stream: true });
+              const lines = chunk.split("\n").filter(line => line.trim() !== ""); // Process new data
+  
+              for (const line of lines) {
+                  if (line.startsWith("data:")) {
+                      try {
+                          const json = JSON.parse(line.substring(5)); // Parse JSON response
+                          if (json.type === "live") {
+                              accumulatedText += json.data; // Append live data
+                              targetElement.innerHTML = accumulatedText; // Update UI
+                          } else if (json.type === "end") {
+                              finalData = JSON.parse(json.data); // Store final "end" response
+                              resolve(finalData); // Resolve the promise with the final data
+                              return;
+                          }
+                      } catch (error) {
+                          console.error("Error parsing JSON:", error, line);
+                      }
+                  }
+              }
+          }
+          resolve(null); // Resolve in case the loop ends without "end" data
+      });
+  }
+  
+  // Wait for the stream to finish and access `finalData` outside
+  const result = await readStream();
+  if (accumulatedText === "" || accumulatedText === " ") {
+    accumulatedText = '[empty]';
+    targetElement.innerHTML = '[empty]';
+}
 
     add_message(window.conversation_id, "user", message);
-    add_message(window.conversation_id, "assistant", data2.response);
+   add_message(window.conversation_id, "assistant", accumulatedText);
 
     message_box.scrollTop = message_box.scrollHeight;
     await remove_cancel_button();
@@ -195,6 +205,7 @@ makePostRequest(url, data);
 
     await load_conversations(20, 0);
     window.scrollTo(0, 0);
+    set_conversation(window.conversation_id);
   } catch (e) {
     add_message(window.conversation_id, "user", message);
 
@@ -291,9 +302,18 @@ const set_conversation = async (conversation_id) => {
 
 const new_conversation = async () => {
   window.conversation_id = uuid();
-
   await clear_conversation();
   await load_conversations(20, 0, true);
+  message_box.innerHTML += `
+  <div class="message">
+      <div class="user">
+          ${gpt_image} <i class="fa-regular fa-phone-arrow-down-left"></i>
+      </div>
+      <div class="content" id="gpt_${window.token}">
+          <div id="content">Hello! Ask me a question by sending a chat! 😊</div>
+      </div>
+  </div>
+`;
 };
 
 const load_conversation = async (conversation_id) => {
@@ -352,6 +372,8 @@ const add_conversation = async (conversation_id, title) => {
         items: [],
       })
     );
+  } else {
+    return -1;
   }
 };
 
@@ -499,41 +521,9 @@ document.querySelector(".mobile-sidebar").addEventListener("click", (event) => {
 });
 
 const register_settings_localstorage = async () => {
-  settings_ids = ["switch", "model", "jailbreak"];
-  settings_elements = settings_ids.map((id) => document.getElementById(id));
-  settings_elements.map((element) =>
-    element.addEventListener(`change`, async (event) => {
-      switch (event.target.type) {
-        case "checkbox":
-          localStorage.setItem(event.target.id, event.target.checked);
-          break;
-        case "select-one":
-          localStorage.setItem(event.target.id, event.target.selectedIndex);
-          break;
-        default:
-          console.warn("Unresolved element type");
-      }
-    })
-  );
 };
 
 const load_settings_localstorage = async () => {
-  settings_ids = ["switch", "model", "jailbreak"];
-  settings_elements = settings_ids.map((id) => document.getElementById(id));
-  settings_elements.map((element) => {
-    if (localStorage.getItem(element.id)) {
-      switch (element.type) {
-        case "checkbox":
-          element.checked = localStorage.getItem(element.id) === "true";
-          break;
-        case "select-one":
-          element.selectedIndex = parseInt(localStorage.getItem(element.id));
-          break;
-        default:
-          console.warn("Unresolved element type");
-      }
-    }
-  });
 };
 
 // Theme storage for recurring viewers
@@ -562,3 +552,4 @@ colorThemes.forEach((themeOption) => {
 });
 
 document.onload = setTheme();
+document.onload = new_conversation();
