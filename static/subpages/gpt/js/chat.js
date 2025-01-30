@@ -528,12 +528,12 @@ const load_settings_localstorage = async () => {
 
 // Theme storage for recurring viewers
 const storeTheme = function (theme) {
-  localStorage.setItem("theme", theme);
+  localStorage.setItem("ctheme", theme);
 };
 
 // set theme when visitor returns
 const setTheme = function () {
-  const activeTheme = localStorage.getItem("theme");
+  const activeTheme = localStorage.getItem("ctheme");
   colorThemes.forEach((themeOption) => {
     if (themeOption.id === activeTheme) {
       themeOption.checked = true;

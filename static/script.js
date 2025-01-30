@@ -500,8 +500,7 @@ if (window.innerWidth <= 600) notification("Some features may not work on smalle
 
 setTimeout(console.log.bind(console, "%cHelium", "background: #6C3BAA;color:#FFF;padding:5px;border-radius: 5px;line-height: 26px; font-size:25px;"));
 setTimeout(console.log.bind(console, "%cIf you are seeing this, the main script system has loaded.", "background: #6C3BAA;color:#FFF;padding:5px;border-radius: 5px;line-height: 20px; font-size:18px;"));
-setTimeout(console.log.bind(console, "%cIf you encounter an error, contact the development team on our discord. DM the info below.", "background: #6C3BAA;color:#FFF;padding:5px;border-radius: 5px;line-height: 20px; font-size:13px;"));
-setTimeout(console.log.bind(console, "%cDo not share output to anyone but trusted Helium developers with a role in the server! Someone may steal your info.", "background: #6C3BAA;color:#FFF;padding:5px;border-radius: 5px;line-height: 20px; font-size:13px;"));
+setTimeout(console.log.bind(console, "%cIf you encounter an error, contact Paxton.", "background: #6C3BAA;color:#FFF;padding:5px;border-radius: 5px;line-height: 20px; font-size:13px;"));
 
 const online = navigator.onLine;
 const userAgent = navigator.userAgent;
