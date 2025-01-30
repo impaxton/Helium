@@ -135,7 +135,7 @@ const ask_gpt = async (message) => {
       ];
     };
     
-    const response = await fetch(`/gpt`, {
+    const response = await fetch(`/gpt/`, {
       method: `POST`,
       signal: window.controller.signal,
       headers: {
