@@ -135,7 +135,7 @@ const ask_gpt = async (message) => {
       ];
     };
     
-    const response = await fetch(`/gpt`, {
+    const response = await fetch(`/gpt/`, {
       method: `POST`,
       signal: window.controller.signal,
       headers: {
@@ -415,8 +415,8 @@ const load_conversations = async (limit, offset, loader) => {
           <i class="fa-regular fa-comments"></i>
           <span class="convo-title">${conversation.title}</span>
       </div>
-      <i onclick="show_option('${conversation.id}')" class="fa-regular fa-trash" id="conv-${conversation.id}"></i>
-      <i onclick="delete_conversation('${conversation.id}')" class="fa-regular fa-check" id="yes-${conversation.id}" style="display:none;"></i>
+      <i onclick="show_option('${conversation.id}')" class="fa-solid fa-trash" id="conv-${conversation.id}"></i>
+      <i onclick="delete_conversation('${conversation.id}')" class="fa-solid fa-check" id="yes-${conversation.id}" style="display:none;"></i>
       <i onclick="hide_option('${conversation.id}')" class="fa-regular fa-x" id="not-${conversation.id}" style="display:none;"></i>
     </div>
     `;

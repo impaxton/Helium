@@ -20,6 +20,7 @@
 	"license": "GPL-3.0-or-later",
 	"dependencies": {
 		"@fastify/static": "^8.0.2",
+		"@fortawesome/fontawesome-svg-core": "^6.7.2",
 		"@mercuryworkshop/bare-mux": "^2.1.6",
 		"@mercuryworkshop/epoxy-transport": "^2.1.25",
 		"@titaniumnetwork-dev/ultraviolet": "^3.2.10",
