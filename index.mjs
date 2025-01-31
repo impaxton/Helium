@@ -42,17 +42,13 @@ fastify.post('/gpt/', async (request, reply) => {
                 "content-type": "application/json",
                 "dnt": "1",
                 "referer": "https://chatgpt4online.org/",
-                "sec-ch-ua": "\"Not A(Brand\";v=\"8\", \"Chromium\";v=\"132\", \"Google Chrome\";v=\"132\"",
-                "sec-ch-ua-mobile": "?1",
-                "sec-ch-ua-platform": "\"Android\"",
-                "user-agent": "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Mobile Safari/537.36",
-                "x-wp-nonce": "840ab3104c"
+                "user-agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1",
+                "x-wp-nonce": "ab44f8a86c"
             },
             body: JSON.stringify(request.body)
         });
-
         reply.header('Content-Type', response.headers.get('content-type'));
-
+		console.log(response);
         // Stream response to client
         for await (const chunk of response.body) {
             reply.raw.write(chunk);
