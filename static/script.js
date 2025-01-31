@@ -387,6 +387,10 @@ function navigateForward() {
 function closeTab(tabIndex) {
   const tabBar = document.getElementById('tabBar');
   const allTabs = document.querySelectorAll('.tab');
+  if (allTabs.length == 1) {
+    notification("You cannot destroy the last tab.", "#ff9999");
+    return;
+  }
   if (tabIndex < 0 || tabIndex >= allTabs.length) return;
   const tabToRemove = allTabs[tabIndex];
   if (tabToRemove.parentNode === tabBar) {
