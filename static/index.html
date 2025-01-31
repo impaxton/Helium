@@ -22,13 +22,13 @@
       <div class="tab-bar" id="tabBar">
         <button class="tab active" id="0" onclick="selectTab(0)">
           <p id="tabText">New Tab</p>
-          <img src="assets/closeTab.svg" id="closeTab" onClick="closeTab()"></img>
+          <img src="assets/closeTab.svg" id="closeTab" onClick="closeTab(0)"></img>
         </button>
         <button class="add-tab" onclick="addTab()">+</button>
     
         <div id="utilities">
           <img src="assets/back.svg" onclick="navigateBack()">
-          <img src="assets/foward.svg" onclick="navigateFoward()">
+          <img src="assets/foward.svg" onclick="navigateForward()">
           <img src="assets/reload.svg" onclick="reloadPage()">
           <img src="assets/bars-solid.svg" onclick="openHamburgerMenu()" id="hamburgermenuicon"></img>
         </div>
@@ -56,7 +56,7 @@
     </div>
     <div id="iframeOverlay">
       <div id="loadingScreen"><div class="lds-circle"><div></div></div><p id="quote"></p></div>
-     <iframe id="browserIframe" allowfullscreen src="subpages/landing/l.html"></iframe>
+     <iframe id="frame0" allowfullscreen src="subpages/landing/l.html"></iframe>
     </div>
   </div>
   <!-- Hover panels -->

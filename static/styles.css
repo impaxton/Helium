@@ -269,7 +269,6 @@ body {
   height: calc(100vh - 60px);
   z-index: 10;
   cursor: default;
-  pointer-events: all; /* Allow all pointer events to be captured */
 }
 iframe {
   border: none;

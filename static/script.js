@@ -14,7 +14,7 @@ window.addEventListener('load', () => {
 setTimeout(() => notification(`ChatGPT is now permanently available in the top-right menu! Give it a try.`, "#039dfc"), 2500);
 
 function reloadPage() {
-  if (iframe.src != "about:blank") iframe.src = iframe.src;
+  if (document.getElementById("frame" + currentTab).src != "about:blank") document.getElementById("frame" + currentTab).src = document.getElementById("frame" + currentTab).src;
 }
 
 function openApps() {
@@ -22,7 +22,7 @@ function openApps() {
 }
 
 function erudaToggle() {
-  const iframe = document.getElementById('browserIframe');
+  const iframe = document.getElementById("frame" + currentTab);
   if (!iframe) return;
   const { contentWindow: erudaWindow, contentDocument: erudaDocument } = iframe;
   if (!erudaWindow || !erudaDocument) return;
@@ -68,7 +68,7 @@ function detectPanicKeys() {
 window.setInterval(checkFocus, 15);
 
 function checkFocus() {
-  const iframe = document.getElementById("browserIframe");
+  const iframe = document.getElementById("frame" + currentTab);
   const activeElement = document.activeElement;
   if (activeElement === iframe) {
     const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
@@ -129,13 +129,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 let currentTab = 0;
 let tabs = [{ url: 'about:blank', history: [], currentHistoryIndex: -1 }];
 const searchBar = document.getElementById('searchBar');
-const iframe = document.getElementById('browserIframe');
 const urlInput = document.getElementById('searchBar');
 const contextMenu = document.getElementById('contextMenu');
 const addTabButton = document.querySelector('.add-tab');
 
-iframe.addEventListener('load', () => {
-  const currentURL = iframe.contentWindow.location.href;
+document.getElementById("frame" + currentTab).addEventListener('load', () => {
+  const currentURL = document.getElementById("frame" + currentTab).contentWindow.location.href;
   if (currentURL && currentURL !== 'about:blank') {
     tabs[currentTab].url = currentURL;
     if (tabs[currentTab].history[tabs[currentTab].currentHistoryIndex] !== currentURL) {
@@ -148,13 +147,13 @@ iframe.addEventListener('load', () => {
       localStorage.setItem('globalHistory', JSON.stringify(globalHistory));
     }
   }
-  document.getElementById(currentTab).querySelector('p').textContent = iframe.contentDocument.title;
+  document.getElementById(currentTab).querySelector('p').textContent = document.getElementById("frame" + currentTab).contentDocument.title;
   document.getElementById('loadingScreen').style.display = 'none';
-  document.getElementById('browserIframe').style.display = 'block';
+  document.getElementById("frame" + currentTab).style.display = 'block';
 });
 
 function fullscreen() {
-  document.getElementById("browserIframe").requestFullscreen();
+  document.getElementById("frame" + currentTab).requestFullscreen();
 }
 
 function loadUrlFromHistory(url) {
@@ -167,28 +166,28 @@ function loadUrlFromHistory(url) {
 async function runService(url) {
     document.getElementById("quote").innerText = quoteText[Math.floor(Math.random() * quoteText.length)];
     document.getElementById('loadingScreen').style.display = 'flex';
-    document.getElementById('browserIframe').style.display = 'none';  
+    document.getElementById("frame" + currentTab).style.display = 'none';  
   const tab = tabs[currentTab];
   if (url) {
     tab.url = url;
   }
   if (tab.url === 'helium://settings' || tab.url.includes("/subpages/settings/s.html")) {
     urlInput.value = "helium://settings";
-    iframe.src = '/subpages/settings/s.html';
+    document.getElementById("frame" + currentTab).src = '/subpages/settings/s.html';
   } else if (tab.url === 'helium://gpt' || tab.url.includes("/subpages/gpt/html/index.html")) {
     urlInput.value = "helium://gpt";
-    iframe.src = '/subpages/gpt/html/index.html';
+    document.getElementById("frame" + currentTab).src = '/subpages/gpt/html/index.html';
   }else if (tab.url === 'helium://apps' || tab.url.includes("/subpages/apps/a.html")) {
     urlInput.value = "helium://apps";
-    iframe.src = '/subpages/apps/a.html';
+    document.getElementById("frame" + currentTab).src = '/subpages/apps/a.html';
   } else if (tab.url === 'helium://landing' || tab.url.includes("/subpages/landing/l.html")) {
     urlInput.value = "";
     urlInput.placeholder = "Search or enter a URL";
-    iframe.src = '/subpages/landing/l.html';
-  }else if (!(tab.url) && tab.url == 'about:blank') {
+    document.getElementById("frame" + currentTab).src = '/subpages/landing/l.html';
+  }else if (!(tab.url) || tab.url == 'about:blank') {
     urlInput.value = "";
     urlInput.placeholder = "Search or enter a URL";
-    iframe.src = '/subpages/landing/l.html';
+    document.getElementById("frame" + currentTab).src = '/subpages/landing/l.html';
   } else {
     const connection = new BareMux.BareMuxConnection("/baremux/worker.js");
     const searchEngine = localStorage.getItem('searchEngine') || "https://www.google.com/search?q=";
@@ -198,7 +197,7 @@ async function runService(url) {
       if (await connection.getTransport() !== "/epoxy/index.mjs") {
         await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
       }
-      iframe.src = tab.url;
+      document.getElementById("frame" + currentTab).src = tab.url;
       urlInput.value = tab.url.includes('/class/') ? __uv$config.decodeUrl(tab.url.split('/class/')[1]) : __uv$config.decodeUrl(tab.url);
     } else {
     if (!/^(https?:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,30}/i.test(tab.url)) {
@@ -214,7 +213,7 @@ tabs[currentTab].currentHistoryIndex = tabs[currentTab].history.length - 1;
 	  if (await connection.getTransport() !== "/epoxy/index.mjs") {
 		  await connection.setTransport("/epoxy/index.mjs", [{ wisp: wispUrl }]);
 	  }
-	  iframe.src = __uv$config.prefix + __uv$config.encodeUrl(tab.url);
+	  document.getElementById("frame" + currentTab).src = __uv$config.prefix + __uv$config.encodeUrl(tab.url);
   }
 }
 }
@@ -242,7 +241,7 @@ function popout() {
   }
   var win = window.open("about:blank", "_blank");
   const frame = document.createElement("iframe");
-  frame.src = document.getElementById("browserIframe").src;
+  frame.src = document.getElementById("frame" + currentTab).src;
   win.document.body.appendChild(frame);
   closeTab(currentTab)
   frame.style.cssText =
@@ -250,11 +249,31 @@ function popout() {
 }
 
 function selectTab(tabIndex) {
+  document.getElementById("frame" + currentTab).style.display='none';
   currentTab = tabIndex;
   document.querySelectorAll('.tab').forEach((tab, index) => {
     tab.classList.toggle('active', index === tabIndex);
   });
-  runService();
+  document.getElementById("frame" + currentTab).style.display = 'block';
+
+  if (!document.getElementById("frame" + currentTab).contentWindow.location.href.includes('/subpages/')) {
+    document.getElementById('searchBar').value = document.getElementById("frame" + currentTab).contentWindow.location.href.includes('/class/') ? __uv$config.decodeUrl(document.getElementById("frame" + currentTab).contentWindow.location.href.split('/class/')[1]) : __uv$config.decodeUrl(document.getElementById("frame" + currentTab).contentWindow.location.href);
+  } else {
+    if (document.getElementById("frame" + currentTab).contentWindow.location.href.includes("/subpages/settings/s.html")) {
+      urlInput.value = "helium://settings";
+    } else if (document.getElementById("frame" + currentTab).contentWindow.location.href.includes("/subpages/gpt/html/index.html")) {
+      urlInput.value = "helium://gpt";
+    }else if (document.getElementById("frame" + currentTab).contentWindow.location.href.includes("/subpages/apps/a.html")) {
+      urlInput.value = "helium://apps";
+    } else if (document.getElementById("frame" + currentTab).contentWindow.location.href.includes("/subpages/landing/l.html")) {
+      urlInput.value = "";
+      urlInput.placeholder = "Search or enter a URL";
+    }else if (!(document.getElementById("frame" + currentTab).contentWindow.location.href) || currentURL == 'about:blank') {
+      urlInput.value = "";
+      urlInput.placeholder = "Search or enter a URL";
+      document.getElementById("frame" + currentTab).src = '/subpages/landing/l.html';
+    }
+  }
 }
 
 function addTab() {
@@ -264,6 +283,24 @@ function addTab() {
   }
   const newTabIndex = tabs.length;
   tabs.push({ url: 'helium://landing', history: [], currentHistoryIndex: -1 });
+
+  const newIframe = document.createElement('iframe');
+console.log(newIframe);
+
+// Get the parent element
+const parentElement = document.getElementById('iframeOverlay');
+
+// Ensure the parent element exists
+if (parentElement) {
+    newIframe.src = "/subpages/landing/l.html";
+    newIframe.id = "frame" + newTabIndex;
+    newIframe.style.display = "block"; // Correct way to hide it
+    parentElement.appendChild(newIframe); // Actually appends it to the DOM
+} else {
+    console.error("Parent element 'iframeOverlay' not found.");
+}
+  
+  document.getElementById("frame" + currentTab).style.display = "none";
 
   const tabBar = document.getElementById('tabBar');
   const newTabButton = document.createElement('button');
@@ -286,7 +323,48 @@ function addTab() {
   newTabButton.onclick = () => selectTab(newTabIndex);
   tabBar.insertBefore(newTabButton, addTabButton);
 
-  selectTab(newTabIndex);
+  currentTab = newTabIndex;
+  document.querySelectorAll('.tab').forEach((tab, index) => {
+    tab.classList.toggle('active', index === newTabIndex);
+  });
+
+  document.getElementById("frame" + currentTab).addEventListener('load', () => {
+    const currentURL = document.getElementById("frame" + currentTab).contentWindow.location.href;
+    if (currentURL) {
+      tabs[currentTab].url = currentURL;
+      if (tabs[currentTab].history[tabs[currentTab].currentHistoryIndex] !== currentURL) {
+        tabs[currentTab].history.push(currentURL);
+        tabs[currentTab].currentHistoryIndex = tabs[currentTab].history.length - 1;
+      }
+      const globalHistory = JSON.parse(localStorage.getItem('globalHistory')) || [];
+      if (!globalHistory.includes(currentURL)) {
+        globalHistory.push(currentURL);
+        localStorage.setItem('globalHistory', JSON.stringify(globalHistory));
+      }
+      if (!currentURL.includes('/subpages/')) {
+        document.getElementById('searchBar').value = currentURL.includes('/class/') ? __uv$config.decodeUrl(currentURL.split('/class/')[1]) : __uv$config.decodeUrl(currentURL);
+      } else {
+        if (currentURL.includes("/subpages/settings/s.html")) {
+          urlInput.value = "helium://settings";
+        } else if (currentURL.includes("/subpages/gpt/html/index.html")) {
+          urlInput.value = "helium://gpt";
+        }else if (currentURL.includes("/subpages/apps/a.html")) {
+          urlInput.value = "helium://apps";
+        } else if (currentURL.includes("/subpages/landing/l.html")) {
+          urlInput.value = "";
+          urlInput.placeholder = "Search or enter a URL";
+        }else if (!(currentURL) || currentURL == 'about:blank') {
+          urlInput.value = "";
+          urlInput.placeholder = "Search or enter a URL";
+          document.getElementById("frame" + currentTab).src = '/subpages/landing/l.html';
+        }
+      }
+    }
+    document.getElementById(currentTab).querySelector('p').textContent = document.getElementById("frame" + currentTab).contentDocument.title;
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById("frame" + currentTab).style.display = 'block';
+  });
+  
 }
 
 function navigateBack() {
@@ -308,26 +386,30 @@ function navigateForward() {
 function closeTab(tabIndex) {
   const tabBar = document.getElementById('tabBar');
   const allTabs = document.querySelectorAll('.tab');
-  if (allTabs.length === 0 || tabIndex < 0 || tabIndex >= allTabs.length) return;
+  if (tabIndex < 0 || tabIndex >= allTabs.length) return;
   const tabToRemove = allTabs[tabIndex];
-  if (tabToRemove && tabToRemove.parentNode === tabBar) tabBar.removeChild(tabToRemove);
-
+  if (tabToRemove.parentNode === tabBar) {
+    tabBar.removeChild(tabToRemove);
+    console.log("hello");
+  }
   tabs.splice(tabIndex, 1);
   if (currentTab === tabIndex) {
     if (tabIndex > 0) selectTab(tabIndex - 1);
     else if (tabs.length > 0) selectTab(0);
     else {
-      iframe.src = 'about:blank';
-      urlInput.value = '';
+      iframe.src = '/subpages/landing/l.html';
+      urlInput.value = 'helium://landing';
     }
   } else if (currentTab > tabIndex) currentTab--;
-  reassignTabIndices();
+  reassignTabIndices(tabIndex);
 }
 
-function reassignTabIndices() {
+function reassignTabIndices(tabIndex) {
   const allTabs = document.querySelectorAll('.tab');
   allTabs.forEach((tab, index) => {
+    if (index > tabIndex) index = index - 1;
     tab.onclick = () => selectTab(index);
+    tab.id = index;
     tab.querySelector('#closeTab').onclick = (event) => {
       event.stopPropagation();
       closeTab(index);
@@ -337,32 +419,46 @@ function reassignTabIndices() {
 
 let ignoreClose = false;
 
+
 function openHamburgerMenu() {
   const menu = document.getElementById("hamburgerbackground");
   const buttons = document.getElementById('hamburgermenu').querySelectorAll('button');
+
+  if (!menu || !buttons.length) return;
+
   if (menu.style.display === 'none' || menu.style.display === '') {
-    menu.style.display = 'block';
-    setTimeout(() => ignoreClose = false, 0);
-    buttons.forEach(button => button.addEventListener('click', closeHamburgerMenu));
-    setTimeout(() => document.addEventListener('click', closeOnClickOutside), 10);
+      menu.style.display = 'block';
+      ignoreClose = true; // Prevent immediate close
+
+      setTimeout(() => {
+          ignoreClose = false; // Allow closing after opening animation
+          document.getElementById('iframeOverlay').addEventListener('click', closeOnClickOutside);
+      }, 50);
+
+      buttons.forEach(button => button.addEventListener('click', closeHamburgerMenu));
   } else {
-    closeHamburgerMenu();
+      closeHamburgerMenu();
   }
 }
 
 function closeHamburgerMenu() {
   const menu = document.getElementById("hamburgerbackground");
-  menu.style.display = 'none';
-  document.removeEventListener('click', closeOnClickOutside);
+  if (menu) {
+      menu.style.display = 'none';
+      document.removeEventListener('click', closeOnClickOutside);
+  }
 }
 
 function closeOnClickOutside(event) {
+  console.log("hello");
   const menu = document.getElementById("hamburgermenu");
-  if (ignoreClose) {
-    ignoreClose = false;
-    return;
+
+  if (ignoreClose) return;
+
+  // `offsetParent !== null` is a reliable check for visibility
+  if (menu && menu.offsetParent !== null && !menu.contains(event.target)) {
+      closeHamburgerMenu();
   }
-  if (!menu.contains(event.target) && menu.style.display === 'block') closeHamburgerMenu();
 }
 
 window.onload = () => runService();
@@ -530,5 +626,48 @@ document.getElementById("quote").innerText = quoteText[Math.floor(Math.random() 
 setTimeout(console.log.bind(console, `%cInformation:\nOnline: ${online}\nURL: ${diagnosticDomain}\nBrowser: ${browserName}\nUA: ${userAgent}`, "background: grey;color:white;padding:5px;line-height: 15px; border-radius: 5px;font-size:12px;"));
 
 
-//gpt widget
+document.addEventListener("DOMContentLoaded", function () {
+  function applyIframeFix(iframe) {
+      if (!iframe) return;
+
+      iframe.addEventListener("load", function () {
+          try {
+              const iframeWindow = iframe.contentWindow;
+              const iframeDoc = iframe.contentDocument || (iframeWindow ? iframeWindow.document : null);
+
+              if (!iframeWindow || !iframeDoc) return;
+
+              iframeDoc.querySelectorAll("a[target='_blank'], a[target='_top']").forEach(link => {
+                  link.addEventListener("click", function (event) {
+                      event.preventDefault();
+                      addTab();
+                      runService(link.href);
+                  });
+              });
+
+              iframeWindow.open = function (url) {
+                  console.log(`Intercepted window.open: ${url}`);
+                  addTab();
+                  runService(url);
+                  return { focus() {}, close() {} }; 
+              };
+
+          } catch (error) {
+              alert("Cross-origin iframe detected. Cannot modify its content.");
+          }
+      });
+  }
+
+  document.querySelectorAll("iframe").forEach(applyIframeFix);
+
+  new MutationObserver((mutations) => {
+      mutations.forEach(mutation => {
+          mutation.addedNodes.forEach(node => {
+              if (node.tagName === "IFRAME") applyIframeFix(node);
+          });
+      });
+  }).observe(document.body, { childList: true, subtree: true });
+});
+
+
 
