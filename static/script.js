@@ -18,6 +18,7 @@ function reloadPage() {
 }
 
 function openApps() {
+	addTab();
   runService('helium://apps');
 }
 
@@ -538,6 +539,7 @@ suggestionsList.addEventListener('click', (event) => {
 });
 
 function openSettings() {
+	addTab();
   runService('helium://settings');
 }
 
